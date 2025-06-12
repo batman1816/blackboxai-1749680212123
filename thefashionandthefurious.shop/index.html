@@ -31,7 +31,10 @@
                 </ul>
             </nav>
             <div class="cart">
-                <a href="#cart" aria-label="Shopping Cart"><i class="fas fa-shopping-cart"></i></a>
+                <button id="cartButton" aria-label="Shopping Cart" style="background:none; border:none; cursor:pointer; color:#fff; position:relative;">
+                    <i class="fas fa-shopping-cart" style="font-size:1.3em;"></i>
+                    <span id="cartCount" style="position:absolute; top:-8px; right:-8px; background:#ff0000; color:#fff; border-radius:50%; padding:2px 6px; font-size:0.75em; display:none;">0</span>
+                </button>
             </div>
         </div>
     </header>
@@ -58,29 +61,41 @@
                     <img src="assets/placeholder.svg" alt="Red Bull Racing Tee" class="product-image">
                     <h3>Red Bull Racing Tee</h3>
                     <p>Show your support for the champions with this stylish team shirt.</p>
-                    <div class="product-price">2,499 Taka</div>
-                    <button class="purchase-btn">Purchase</button>
+                    <div class="product-price">649 Taka</div>
+                    <div class="product-buttons">
+                        <button class="purchase-btn">Purchase</button>
+                        <button class="add-to-cart-btn">Add to Cart</button>
+                    </div>
                 </div>
                 <div class="product">
                     <img src="assets/placeholder.svg" alt="Ferrari Classic Edition" class="product-image">
                     <h3>Ferrari Classic Edition</h3>
                     <p>Embrace the legacy of the Prancing Horse with this iconic design.</p>
-                    <div class="product-price">2,799 Taka</div>
-                    <button class="purchase-btn">Purchase</button>
+                    <div class="product-price">649 Taka</div>
+                    <div class="product-buttons">
+                        <button class="purchase-btn">Purchase</button>
+                        <button class="add-to-cart-btn">Add to Cart</button>
+                    </div>
                 </div>
                 <div class="product">
                     <img src="assets/placeholder.svg" alt="Mercedes AMG F1 Special" class="product-image">
                     <h3>Mercedes AMG F1 Special</h3>
                     <p>Sleek and sophisticated, just like the Silver Arrows.</p>
-                    <div class="product-price">2,499 Taka</div>
-                    <button class="purchase-btn">Purchase</button>
+                    <div class="product-price">649 Taka</div>
+                    <div class="product-buttons">
+                        <button class="purchase-btn">Purchase</button>
+                        <button class="add-to-cart-btn">Add to Cart</button>
+                    </div>
                 </div>
                 <div class="product">
                     <img src="assets/placeholder.svg" alt="McLaren Heritage" class="product-image">
                     <h3>McLaren Heritage</h3>
                     <p>Celebrate the legacy of one of F1's most iconic teams.</p>
-                    <div class="product-price">2,799 Taka</div>
-                    <button class="purchase-btn">Purchase</button>
+                    <div class="product-price">649 Taka</div>
+                    <div class="product-buttons">
+                        <button class="purchase-btn">Purchase</button>
+                        <button class="add-to-cart-btn">Add to Cart</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -115,153 +130,99 @@
         </div>
     </footer>
 
-    <!-- Modern Checkout Modal -->
-    <div id="checkoutModal" class="modal">
-        <div class="modal-content modern-checkout">
-            <span class="close" id="checkoutClose">&times;</span>
+    <!-- Full Page Checkout Section -->
+    <section id="checkoutPage" style="display:none;">
+        <div class="container">
+            <h1>Checkout</h1>
             
-            <!-- Progress Bar -->
-            <div class="checkout-progress">
-                <div class="progress-step active" data-step="1">
-                    <div class="step-number">1</div>
-                    <div class="step-label">Order Details</div>
-                </div>
-                <div class="progress-step" data-step="2">
-                    <div class="step-number">2</div>
-                    <div class="step-label">Shipping</div>
-                </div>
-                <div class="progress-step" data-step="3">
-                    <div class="step-number">3</div>
-                    <div class="step-label">Confirmation</div>
+            <!-- Cart Items Section -->
+            <div class="cart-items">
+                <h2>Your Cart</h2>
+                <div id="cartItemsList">
+                    <!-- Cart items will be dynamically inserted here -->
                 </div>
             </div>
 
-            <div class="checkout-container">
-                <!-- Left Column - Form -->
-                <div class="checkout-form-container">
-                    <form id="checkoutForm">
-                        <!-- Step 1: Order Details -->
-                        <div class="checkout-step" data-step="1">
-                            <h2>Order Details</h2>
-                            <div class="product-preview">
-                                <div class="product-image">
-                                    <img src="" alt="Product Image" id="checkoutProductImage">
-                                </div>
-                                <div class="product-info">
-                                    <h3 id="checkoutProductName"></h3>
-                                    <div class="size-selector">
-                                        <label>Select Size</label>
-                                        <div class="size-options">
-                                            <label class="size-option">
-                                                <input type="radio" name="size" value="S">
-                                                <span>S</span>
-                                            </label>
-                                            <label class="size-option">
-                                                <input type="radio" name="size" value="M">
-                                                <span>M</span>
-                                            </label>
-                                            <label class="size-option">
-                                                <input type="radio" name="size" value="L">
-                                                <span>L</span>
-                                            </label>
-                                            <label class="size-option">
-                                                <input type="radio" name="size" value="XL">
-                                                <span>XL</span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <button type="button" class="next-step">Continue to Shipping</button>
-                        </div>
-
-                        <!-- Step 2: Shipping Information -->
-                        <div class="checkout-step" data-step="2" style="display: none;">
-                            <h2>Shipping Information</h2>
-                            <div class="form-group">
-                                <input type="text" id="name" name="name" placeholder="Full Name" required>
-                            </div>
-                            <div class="form-group">
-                                <input type="email" id="email" name="email" placeholder="Email Address" required>
-                            </div>
-                            <div class="form-group">
-                                <input type="tel" id="phone" name="phone" placeholder="Phone Number" required>
-                            </div>
-                            <div class="form-group">
-                                <textarea id="address" name="address" placeholder="Delivery Address" required></textarea>
-                            </div>
-                            <div class="delivery-options">
-                                <h3>Delivery Location</h3>
-                                <label class="delivery-option">
-                                    <input type="radio" name="delivery" value="inside" required>
-                                    <span class="option-content">
-                                        <span class="option-title">Inside Dhaka</span>
-                                        <span class="option-price">70 Taka</span>
-                                    </span>
-                                </label>
-                                <label class="delivery-option">
-                                    <input type="radio" name="delivery" value="outside" required>
-                                    <span class="option-content">
-                                        <span class="option-title">Outside Dhaka</span>
-                                        <span class="option-price">140 Taka</span>
-                                    </span>
-                                </label>
-                            </div>
-                            <div class="step-buttons">
-                                <button type="button" class="prev-step">Back</button>
-                                <button type="button" class="next-step">Review Order</button>
-                            </div>
-                        </div>
-
-                        <!-- Step 3: Order Review -->
-                        <div class="checkout-step" data-step="3" style="display: none;">
-                            <h2>Review Your Order</h2>
-                            <div class="order-review">
-                                <div class="review-section">
-                                    <h3>Shipping To</h3>
-                                    <div id="shippingDetails" class="review-details"></div>
-                                </div>
-                                <div class="review-section">
-                                    <h3>Order Summary</h3>
-                                    <div class="review-product">
-                                        <img src="" alt="Product" id="reviewProductImage">
-                                        <div class="review-product-details">
-                                            <h4 id="reviewProductName"></h4>
-                                            <p>Size: <span id="reviewSize"></span></p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="step-buttons">
-                                <button type="button" class="prev-step">Back</button>
-                                <button type="submit" class="place-order">Place Order</button>
-                            </div>
-                        </div>
-                    </form>
+            <!-- Order Summary -->
+            <div class="order-summary">
+                <h3>Order Summary</h3>
+                <div class="summary-item">
+                    <span>Subtotal</span>
+                    <span id="subtotalPrice">0 Taka</span>
                 </div>
+                <div class="summary-item">
+                    <span>Delivery Charge</span>
+                    <span id="deliveryCharge">0 Taka</span>
+                </div>
+                <div class="summary-total">
+                    <span>Total</span>
+                    <span id="orderTotal">0 Taka</span>
+                </div>
+            </div>
 
-                <!-- Right Column - Order Summary -->
-                <div class="order-summary-container">
-                    <div class="order-summary">
-                        <h3>Order Summary</h3>
-                        <div class="summary-item">
-                            <span>Product Price</span>
-                            <span id="productPrice">0 Taka</span>
-                        </div>
-                        <div class="summary-item">
-                            <span>Delivery Charge</span>
-                            <span id="deliveryCharge">0 Taka</span>
-                        </div>
-                        <div class="summary-total">
-                            <span>Total</span>
-                            <span id="orderTotal">0 Taka</span>
-                        </div>
-                        <div class="payment-method">
-                            <img src="assets/cod-icon.svg" alt="Cash on Delivery" width="24" height="24">
-                            <span>Cash on Delivery</span>
-                        </div>
+            <form id="checkoutForm">
+                <h2>Shipping Information</h2>
+                    <div class="form-group">
+                        <input type="text" id="name" name="name" placeholder="Full Name" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" id="email" name="email" placeholder="Email Address" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="tel" id="phone" name="phone" placeholder="Phone Number" required>
+                    </div>
+                    <div class="form-group">
+                        <textarea id="address" name="address" placeholder="Delivery Address" required></textarea>
+                    </div>
+                    <div class="delivery-options">
+                        <h3>Delivery Location</h3>
+                        <label class="delivery-option">
+                            <input type="radio" name="delivery" value="inside" required>
+                            <span class="option-content">
+                                <span class="option-title">Inside Dhaka</span>
+                                <span class="option-price">70 Taka</span>
+                            </span>
+                        </label>
+                        <label class="delivery-option">
+                            <input type="radio" name="delivery" value="outside" required>
+                            <span class="option-content">
+                                <span class="option-title">Outside Dhaka</span>
+                                <span class="option-price">140 Taka</span>
+                            </span>
+                        </label>
+                    </div>
+                    <button type="submit" class="place-order">Place Order</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Purchase Modal -->
+    <div id="purchaseModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <div class="modal-product">
+                <img src="" alt="" class="modal-product-image">
+                <div class="modal-product-info">
+                    <h3></h3>
+                    <div class="modal-product-price"></div>
+                    <div class="modal-size-options">
+                        <label for="modalSize">Size:</label>
+                        <select id="modalSize" name="modalSize">
+                            <option value="S">S</option>
+                            <option value="M" selected>M</option>
+                            <option value="L">L</option>
+                            <option value="XL">XL</option>
+                        </select>
+                    </div>
+                    <div class="modal-quantity">
+                        <label for="modalQuantity">Quantity:</label>
+                        <input type="number" id="modalQuantity" name="modalQuantity" min="1" value="1">
                     </div>
                 </div>
+            </div>
+            <div class="modal-buttons">
+                <button id="proceedToCheckout">Proceed to Checkout</button>
+                <button id="addToCartFromModal">Add to Cart</button>
             </div>
         </div>
     </div>
