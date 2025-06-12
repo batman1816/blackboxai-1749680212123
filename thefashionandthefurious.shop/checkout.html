@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Checkout - The Fashion & The Furious</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="logo">
+        <img src="assets/logo.png" alt="The Fashion & The Furious" style="height: 50px; width: auto; object-fit: contain;" />
+      </div>
+      <nav>
+        <ul>
+          <li><a href="index.html#drivers">DRIVERS</a></li>
+          <li><a href="index.html#teams">TEAMS</a></li>
+          <li><a href="index.html#classic">CLASSIC F1</a></li>
+          <li><a href="index.html#new">NEW ARRIVAL</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <section id="checkoutPage" class="container">
+    <h1>Checkout</h1>
+    
+    <!-- Cart Items Section -->
+    <div class="cart-items">
+      <h2>Your Cart</h2>
+      <div id="cartItemsList">
+        <!-- Cart items will be dynamically inserted here -->
+      </div>
+    </div>
+
+    <!-- Order Summary -->
+    <div class="order-summary">
+      <h3>Order Summary</h3>
+      <div class="summary-item">
+        <span>Subtotal</span>
+        <span id="subtotalPrice">0 Taka</span>
+      </div>
+      <div class="summary-item">
+        <span>Delivery Charge</span>
+        <span id="deliveryCharge">0 Taka</span>
+      </div>
+      <div class="summary-total">
+        <span>Total</span>
+        <span id="orderTotal">0 Taka</span>
+      </div>
+    </div>
+
+    <form id="checkoutForm">
+      <h2>Shipping Information</h2>
+      <div class="form-group">
+        <input type="text" id="name" name="name" placeholder="Full Name" required />
+      </div>
+      <div class="form-group">
+        <input type="email" id="email" name="email" placeholder="Email Address" required />
+      </div>
+      <div class="form-group">
+        <input type="tel" id="phone" name="phone" placeholder="Phone Number" required />
+      </div>
+      <div class="form-group">
+        <textarea id="address" name="address" placeholder="Delivery Address" required></textarea>
+      </div>
+      <div class="delivery-options">
+        <h3>Delivery Location</h3>
+        <label class="delivery-option">
+          <input type="radio" name="delivery" value="inside" required />
+          <span class="option-content">
+            <span class="option-title">Inside Dhaka</span>
+            <span class="option-price">70 Taka</span>
+          </span>
+        </label>
+        <label class="delivery-option">
+          <input type="radio" name="delivery" value="outside" required />
+          <span class="option-content">
+            <span class="option-title">Outside Dhaka</span>
+            <span class="option-price">140 Taka</span>
+          </span>
+        </label>
+      </div>
+      <button type="submit" class="place-order">Place Order</button>
+    </form>
+  </section>
+
+  <script>
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+    const cartItemsList = document.getElementById('cartItemsList');
+    const subtotalPrice = document.getElementById('subtotalPrice');
+    const deliveryCharge = document.getElementById('deliveryCharge');
+    const orderTotal = document.getElementById('orderTotal');
+    const checkoutForm = document.getElementById('checkoutForm');
+
+    function updateCartItemQuantity(productName, size, increase) {
+      const item = cart.find(item => item.name === productName && item.size === size);
+      if (item) {
+        if (increase) {
+          item.quantity++;
+        } else if (item.quantity > 1) {
+          item.quantity--;
+        }
+        localStorage.setItem('cart', JSON.stringify(cart));
+        renderCartItems();
+        updateOrderSummary();
+      }
+    }
+
+    function renderCartItems() {
+      cartItemsList.innerHTML = cart.map(item => `
+        <div class="cart-item">
+          <div class="cart-item-image">
+            <img src="${item.image || 'assets/placeholder.svg'}" alt="${item.name}" />
+          </div>
+          <div class="cart-item-details">
+            <div class="cart-item-name">${item.name}</div>
+            <div class="cart-item-size">Size: ${item.size}</div>
+            <div class="cart-item-price">${item.price} Taka</div>
+            <div class="cart-item-quantity">
+              <button type="button" class="quantity-btn minus" data-product="${item.name}" data-size="${item.size}">-</button>
+              <span>${item.quantity}</span>
+              <button type="button" class="quantity-btn plus" data-product="${item.name}" data-size="${item.size}">+</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+      // Add quantity button handlers
+      cartItemsList.querySelectorAll('.quantity-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const productName = e.target.dataset.product;
+          const size = e.target.dataset.size;
+          const isPlus = e.target.classList.contains('plus');
+          updateCartItemQuantity(productName, size, isPlus);
+        });
+      });
+    }
+
+    function updateOrderSummary() {
+      const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      const deliveryLocation = checkoutForm.delivery.value;
+      const deliveryFee = deliveryLocation === 'inside' ? 70 : 140;
+      const total = subtotal + deliveryFee;
+
+      subtotalPrice.textContent = `${subtotal} Taka`;
+      deliveryCharge.textContent = `${deliveryFee} Taka`;
+      orderTotal.textContent = `${total} Taka`;
+    }
+
+    checkoutForm.addEventListener('change', (e) => {
+      if (e.target.name === 'delivery') {
+        updateOrderSummary();
+      }
+    });
+
+    checkoutForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const requiredFields = ['name', 'email', 'phone', 'address', 'delivery'];
+      for (const field of requiredFields) {
+        const input = checkoutForm.elements[field];
+        if (!input || !input.value) {
+          alert(`Please fill in the ${field} field`);
+          return;
+        }
+      }
+
+      // Basic email validation
+      const email = checkoutForm.elements['email'].value;
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        alert('Please enter a valid email address');
+        return;
+      }
+
+      // Basic phone validation
+      const phone = checkoutForm.elements['phone'].value;
+      const phoneRegex = /^\d{10,}$/;
+      if (!phoneRegex.test(phone.replace(/[\s-]/g, ''))) {
+        alert('Please enter a valid phone number');
+        return;
+      }
+
+      const formData = new FormData(checkoutForm);
+      const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      const deliveryFee = formData.get('delivery') === 'inside' ? 70 : 140;
+
+      const orderData = {
+        items: cart,
+        customerName: formData.get('name'),
+        email: formData.get('email'),
+        phone: formData.get('phone'),
+        address: formData.get('address'),
+        deliveryLocation: formData.get('delivery') === 'inside' ? 'Inside Dhaka' : 'Outside Dhaka',
+        deliveryCharge: deliveryFee,
+        subtotal: subtotal,
+        total: subtotal + deliveryFee,
+        paymentMethod: 'Cash on Delivery',
+        timestamp: new Date().toISOString()
+      };
+
+      try {
+        const response = await fetch('/send-notification', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(orderData)
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(`Failed to send notification: ${errorText}`);
+        }
+
+        alert('Order placed successfully! Thank you for your purchase.');
+
+        localStorage.removeItem('cart');
+        window.location.href = 'index.html';
+      } catch (error) {
+        alert('Failed to send order notification. Please try again later.');
+        console.error(error);
+      }
+    });
+
+    renderCartItems();
+    updateOrderSummary();
+  </script>
+</body>
+</html>
